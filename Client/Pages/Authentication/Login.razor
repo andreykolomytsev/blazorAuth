@@ -1,0 +1,35 @@
+﻿@page "/login"
+@attribute [AllowAnonymous]
+
+<EditForm OnValidSubmit="SubmitAsync" EditContext="@editContext">
+    <DataAnnotationsValidator />
+    <MudGrid>
+        <MudItem xs="12">
+            <MudText Typo="Typo.h4" Color="Color.Primary" Align="Align.Center" Style="font-weight: bold">Авторизация</MudText>
+        </MudItem>
+        <MudItem xs="12">
+            <MudTextField T="string" Label="Логин" Variant="Variant.Outlined"
+                          @bind-Value="_authModel.Email" For="@(() => _authModel.Email)" />
+        </MudItem>
+        <MudItem xs="12">
+            <MudTextField Label="Пароль" Variant="Variant.Outlined"
+                          @bind-Value="_authModel.Password" For="@(() => _authModel.Password)"
+                          InputType="@_passwordInput" Adornment="Adornment.End" AdornmentIcon="@_passwordInputIcon" OnAdornmentClick="TogglePasswordVisibility" />
+        </MudItem>
+        <MudItem xs="12">
+            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Disabled="@(!Validated || _loading)" Color="Color.Primary" Size="Size.Large" FullWidth="true">
+                @if (_loading)
+                {
+                    <MudProgressCircular Size="Size.Small" Color="Color.Info" Indeterminate="true" />
+                    <MudText Class="ml-2">Авторизация...</MudText> }
+                else
+                {
+                    <MudText>Войти</MudText>
+                }
+            </MudButton>
+        </MudItem>
+        <MudItem xs="12">
+            <MudButton OnClick="FillAdministratorCredentials">Дефолт</MudButton>
+        </MudItem>
+    </MudGrid>
+</EditForm>

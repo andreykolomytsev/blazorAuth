@@ -1,0 +1,26 @@
+﻿
+<EditForm Model="@_roleModel" OnValidSubmit="SubmitAsync">
+    <DataAnnotationsValidator />
+    <div class="pl-7 pr-7">
+        <TextField ValueExpression="@(() => _roleModel.Name)" @bind-MyValue="_roleModel.Name" MyLabel="Наименование" MyRequired />
+        <TextField ValueExpression="@(() => _roleModel.Description)" @bind-MyValue="_roleModel.Description" MyLabel="Описание" MyLines="4" />
+    </div>
+
+    <MudGrid Spacing="1" Class="d-flex justify-end py-3 px-7">
+        <MudItem xs="12" sm="6" md="3">
+            <MudButton DisableElevation Variant="Variant.Filled" Color="Color.Success" FullWidth Disabled="_loading" ButtonType="ButtonType.Submit">
+                @if (_loading)
+                {
+                    <MudProgressCircular Size="Size.Small" Color="Color.Info" Indeterminate="true" />
+                }
+                else
+                {
+                    <MudText>Сохранить</MudText>
+                }
+            </MudButton>
+        </MudItem>
+        <MudItem xs="12" sm="6" md="3">
+            <MudButton DisableElevation Variant="Variant.Filled" OnClick="Cancel" FullWidth>Отмена</MudButton>
+        </MudItem>
+    </MudGrid>
+</EditForm>

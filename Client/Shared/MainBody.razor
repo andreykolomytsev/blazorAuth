@@ -1,0 +1,55 @@
+﻿@using AuthClient.Client.Shared.Components
+
+<MudLayout>
+    <MudAppBar Elevation="3">
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+        <MudHidden Breakpoint="Breakpoint.MdAndUp" Invert="true">
+            <MudDrawerHeader>
+                <a href="/"><img src="#" height="50" /></a>
+            </MudDrawerHeader>
+        </MudHidden>
+        <MudSpacer />
+        <MudHidden Breakpoint="Breakpoint.MdAndUp" Invert="true">
+            <MudTooltip Text="Темная тема">
+                <MudIconButton Icon="@Icons.Material.Filled.Brightness4" OnClick="@((e) => ToggleDarkMode())" />
+            </MudTooltip>
+        </MudHidden>
+        <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
+            <MudIconButton Icon="@Icons.Material.Filled.Brightness4" OnClick="@((e) => ToggleDarkMode())" />
+        </MudHidden>
+        <MudMenu Direction="Direction.Bottom" OffsetX="true" OffsetY="true" Dense="true" Class="mt-1 ml-4">
+            <ActivatorContent>
+                <MudChip Icon="@Icons.Material.Filled.SupervisedUserCircle" Size="Size.Large">@Email</MudChip>
+                @*<MudButton Variant="Variant.Text" StartIcon="@Icons.Material.Filled.VerifiedUser">@Email</MudButton>*@
+                @*<MudAvatar Color="Color.Secondary">@FirstLetterOfName</MudAvatar>*@
+            </ActivatorContent>
+            <ChildContent>
+                <UserCard Class="mt-n2" />
+                <MudDivider Class="mb-2" Light="true" />
+                @if (_canViewTokens || _canViewUsers)
+                {
+                    <MudMenuItem OnClick="ProfileClick">
+                        <div class="d-flex">
+                            <MudIcon Icon="fas fa-user-alt" />
+                            <MudText Class="ml-3">Мой профиль</MudText>
+                        </div>
+                    </MudMenuItem>
+                }
+                <MudMenuItem OnClick="LogoutClick">
+                    <div class="d-flex">
+                        <MudIcon Icon="fas fa-sign-out-alt" />
+                        <MudText Class="ml-3">Выход</MudText>
+                    </div>
+                </MudMenuItem>
+            </ChildContent>
+        </MudMenu>
+    </MudAppBar>
+    <MudDrawer @bind-Open="_drawerOpen" Elevation="0" Variant="DrawerVariant" OpenMiniOnHover="false" ClipMode="DrawerClipMode.Always">
+        <NavMenu />
+    </MudDrawer>
+    <MudMainContent>
+        <MudContainer MaxWidth="MaxWidth.False">
+            @ChildContent
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>

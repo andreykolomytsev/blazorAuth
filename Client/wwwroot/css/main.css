@@ -1,0 +1,66 @@
+﻿.font-bold {
+    font-weight: bold !important;
+}
+
+
+
+.text-16 {
+    font-size: 16px !important;
+}
+
+.text-18 {
+    font-size: 18px !important;
+}
+
+.text-20 {
+    font-size: 20px !important;
+}
+
+.text-30 {
+    font-size: 30px !important;
+}
+
+.pointer {
+    cursor: pointer !important;
+}
+
+.mud-snackbar {
+    flex-wrap: inherit !important;
+}
+
+.hover-service {
+    transition: transform .5s;
+}
+
+.hover-service:hover {
+    transform: scale(1.05);
+}
+
+@media (max-width: 767px) {
+    .mobile-scroll {
+        overflow-y: scroll;
+    }
+    .text-30 {
+        font-size: 18px !important;
+    }
+}
+
+.mud-nav-link {
+    padding: 16px !important;
+}
+
+    .mud-nav-link.active {
+        background-color: var(--mud-palette-background) !important;
+    }
+
+.br-5 {
+    border-radius: 5px !important;
+}
+
+.text-center {
+    text-align: center !important;
+}
+
+.bg-color-element-form {
+    background-color: var(--mud-palette-surface) !important;
+}

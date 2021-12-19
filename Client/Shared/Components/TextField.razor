@@ -1,0 +1,52 @@
+﻿@inherits MudTextField<TValue>
+@typeparam TValue
+
+<MudTextField T="TValue"
+              Label="@MyLabel"
+              Variant="MyVariant"
+              Margin="MyMargin"
+              Value="MyValue"
+              ValueChanged="MyValueChanged"
+              For="ValueExpression"
+              Required="MyRequired"
+              InputType="MyInputType"
+              Adornment="MyAdornment"
+              AdornmentColor="MyAdornmentColor"
+              AdornmentIcon="@MyAdornmentIcon"
+              AdornmentText="@MyAdornmentText"
+              OnAdornmentClick="MyOnAdornmentClick"
+              Lines="@MyLines"
+              Class="mb-3" />
+
+
+@code {
+    [Parameter]
+    public TValue MyValue { get; set; }
+
+    [Parameter] public EventCallback<TValue> MyValueChanged { get; set; }
+
+    [Parameter] public System.Linq.Expressions.Expression<Func<TValue>> ValueExpression { get; set; }
+
+    [Parameter] public string MyLabel { get; set; }
+
+    [Parameter] public Variant MyVariant { get; set; } = Variant.Outlined;
+
+    [Parameter] public Margin MyMargin { get; set; } = Margin.Dense;
+
+    [Parameter] public InputType MyInputType { get; set; } = InputType.Text;
+
+    [Parameter] public bool MyRequired { get; set; } = false;
+
+    [Parameter] public Adornment MyAdornment { get; set; }
+
+    [Parameter] public Color MyAdornmentColor { get; set; }
+
+    [Parameter] public string MyAdornmentIcon { get; set; }
+
+    [Parameter] public string MyAdornmentText { get; set; }
+
+    [Parameter] public EventCallback MyOnAdornmentClick { get; set; }
+
+    [Parameter] public int MyLines { get; set; } = 1;
+}
+

@@ -1,0 +1,36 @@
+﻿@page "/home"
+@page "/"
+@using AuthClient.Client.Infrastructure.Models.Response
+
+<Breadcrumbs Title="Мои сервисы" BreadcrumbItems="_items" />
+
+<MudGrid Spacing="2">
+    <InfiniteScrolling T="ResponseMS" ItemsProvider="GetItems" LoadMore="HasNextPage">
+        <ItemTemplate Context="item">
+            <MudItem xs="12" sm="6" md="6" lg="4">
+
+                <MudCard Outlined="true">
+                    <MudCardHeader>
+                        <MudText Class="font-bold" Typo="Typo.h6">@item.FullName</MudText>
+                    </MudCardHeader>
+                    <MudCardContent Style="height: 60px; overflow-y: scroll">
+                        <MudText Typo="Typo.body2">@item.Description</MudText>
+                    </MudCardContent>
+                    <MudCardActions>
+                        @if (item.Selected)
+                        {
+                            <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="@((e) => Redirect(e, item.URL))">Перейти</MudButton>
+                        }
+                        else
+                        {
+                            <MudButton Variant="Variant.Text" Color="Color.Warning">Хочу попробовать</MudButton>
+                        }
+                    </MudCardActions>
+                </MudCard>
+            </MudItem>
+        </ItemTemplate>
+        <LoadingTemplate>
+            <div class="pa-3">Загрузка...</div>
+        </LoadingTemplate>
+    </InfiniteScrolling>
+</MudGrid>

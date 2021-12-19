@@ -1,0 +1,37 @@
+﻿@using AuthClient.Client.Infrastructure.Models.Response
+
+<MudPaper Elevation="0" Class="pa-3" Style="max-height: 700px; overflow-y: scroll">
+    <MudTable Height="500px" ServerData="@(new Func<TableState, Task<TableData<ResponseTenant>>>(ServerReloadAsync))" Bordered="true" Outlined="true" Hover="true" Striped="true" Breakpoint="Breakpoint.None" FixedHeader="true" Dense="true" HeaderClass="table-head-bordered">
+        <HeaderContent>
+            <MudTh>№</MudTh>
+            <MudTh>Наименование</MudTh>
+            <MudTh>ИНН</MudTh>
+            <MudTh>Email</MudTh>
+            <MudTh>Адрес</MudTh>
+            <MudTh Style="text-align:right">Опции</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="№">@(_tenantList.IndexOf(context) + 1)</MudTd>
+            <MudTd DataLabel="Наименование">@context.FullName</MudTd>
+            <MudTd DataLabel="ИНН">@context.INN</MudTd>
+            <MudTd DataLabel="Email">@context.Email</MudTd>
+            <MudTd DataLabel="Адрес">@context.Address</MudTd>
+
+            <MudTd DataLabel="Actions" Style="text-align: center; width: 90px">
+                <MudButton DisableElevation="true" Variant="Variant.Filled" Color="Color.Warning" Size="Size.Small" OnClick="() => Confirm(context)">Выбрать</MudButton>
+            </MudTd>
+        </RowTemplate>
+
+        <NoRecordsContent>
+            <MudText>Нет данных для отображения</MudText>
+        </NoRecordsContent>
+
+        <LoadingContent>
+            <MudText>Подождите, идет загрузка данных...</MudText>
+        </LoadingContent>
+
+        <PagerContent>
+            <TablePager />
+        </PagerContent>
+    </MudTable>
+</MudPaper>

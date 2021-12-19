@@ -1,0 +1,99 @@
+﻿@page "/management/users/{name}/{id}"
+@attribute [Authorize(Policy = AllPermissions.Users.View)]
+@using AuthClient.Client.Infrastructure.Models.Response
+
+<div class="my-3 d-flex">
+    <MudIconButton Color="Color.Default" Variant="Variant.Text" Icon="@Icons.Material.Outlined.ArrowBack" OnClick="() => { _navigationManager.NavigateBack(); }" Title="Назад" />
+    <MudText Color="Color.Primary" Class="font-bold text-30">@("Пользователи аккаунта " + Name)</MudText>
+</div>
+
+
+<div class="d-flex justify-space-between align-center">
+    <div style="min-width: 40%" class="br-5 bg-color-element-form">
+        <MudTextField T="string" Variant="Variant.Outlined" Margin="Margin.Dense" FullWidth="_isMobileDevice" Immediate="true" Placeholder="Поиск..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="my-0"></MudTextField>
+    </div>
+    <div>
+        <MudButtonGroup Color="Color.Info" Size="Size.Medium" Variant="Variant.Outlined">
+            <MudIconButton Icon="@Icons.Material.Outlined.FormatLineSpacing" Title="Свободный список" OnClick="() => ChangeDense(false)" Disabled="!_dense" />
+            <MudIconButton Icon="@Icons.Material.Outlined.FormatAlignJustify" Title="Компактный список" OnClick="() => ChangeDense(true)" Disabled="_dense" />
+        </MudButtonGroup>
+    </div>
+</div>
+
+
+<MudPaper Class="mt-3 mb-5" Elevation="3">
+    <div class="d-flex justify-space-between align-center">
+        <div class="pa-3">
+            @if (_canCreateUsers)
+            {
+                <MudButton DisableElevation DisableRipple FullWidth="_isMobileDevice" Variant="Variant.Filled" Color="Color.Success" OnClick="(() => InvokeModal())"
+                           StartIcon="@Icons.Material.Outlined.Add" Class="ma-1" title="Добавить нового пользователя">Добавить</MudButton>
+            }
+
+            <MudButton DisableElevation DisableRipple FullWidth="_isMobileDevice" Variant="Variant.Filled" Color="Color.Info" OnClick="ReloadDataAsync"
+                       StartIcon="@Icons.Material.Outlined.Refresh" Disabled="@_loading" Class="ma-1" title="Обновить данные в таблице">
+                Обновить
+            </MudButton>
+        </div>
+        <div class="pa-3">
+
+        </div>
+    </div>
+
+    <MudTable ServerData="@(new Func<TableState, Task<TableData<ResponseUser>>>(ServerReloadAsync))" @ref="_tableData" Elevation="0" Loading="@_loading" Bordered="false" Outlined="false" Hover="true" Striped="false" Breakpoint="Breakpoint.None" FixedHeader="true" Dense="_dense">
+        <HeaderContent>
+            <MudTh></MudTh>
+            <MudTh>№</MudTh>
+            <MudTh>Аккаунт</MudTh>
+            <MudTh>Email</MudTh>
+            <MudTh>Номер телефона</MudTh>
+            @if (_canEditUsers || _canViewRoles)
+            {
+                <MudTh Class="text-center">Опции</MudTh>
+            }
+        </HeaderContent>
+
+        <RowTemplate>
+            <MudTd DataLabel="Active" Class="text-center">
+                <MudIcon Icon="@(context.IsActive ? Icons.Material.Filled.CheckCircle : Icons.Material.Filled.RemoveCircleOutline)"
+                         Color="@(context.IsActive ? Color.Success : Color.Error)" Title="@(context.IsActive ? "Активен" : "Заблокирован")"></MudIcon>
+            </MudTd>
+            <MudTd DataLabel="№">@(_userList.IndexOf(context) + 1)</MudTd>
+            <MudTd DataLabel="Name">
+                @if (context.ExistChild)
+                {
+                    <MudLink Href=@($"/management/users/{context.LastName + " " + context.FirstName}/{context.Id}")>@context.LastName @context.FirstName</MudLink>
+                }
+                else
+                {
+                    <MudText>@context.LastName @context.FirstName</MudText>
+                }
+            </MudTd>
+            <MudTd DataLabel="Email">@context.Email</MudTd>
+            <MudTd DataLabel="PhoneNumber">@context.PhoneNumber</MudTd>
+            @if (_canEditUsers)
+            {
+                <MudTd DataLabel="Actions" Style="width: 80px">
+                    <MudMenu Direction="Direction.Start" OffsetX="true" Icon="@Icons.Material.Filled.MoreVert" Color="Color.Primary">
+                        @if (_canEditUsers)
+                        {
+                            <MudMenuItem OnClick="(() => InvokeModal(context.Id))"><div class="d-flex"><MudIcon Icon="fas fa-edit" Color="Color.Info" Class="mr-3" />Изменить</div></MudMenuItem>
+                        }
+                    </MudMenu>
+                </MudTd>
+            }
+        </RowTemplate>
+
+        <NoRecordsContent>
+            <MudText>Нет данных для отображения</MudText>
+        </NoRecordsContent>
+
+        <LoadingContent>
+            <MudText>Подождите, идет загрузка данных...</MudText>
+        </LoadingContent>
+
+        <PagerContent>
+            <TablePager />
+        </PagerContent>
+    </MudTable>
+</MudPaper>

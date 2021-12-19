@@ -1,0 +1,56 @@
+﻿
+<div style="overflow-y: scroll; max-height: 750px" class="px-3">
+    @if (_loading)
+    {
+        <div class="text-center mt-5">
+            <MudProgressLinear Color="Color.Primary" Size="Size.Large" Indeterminate="true" />
+        </div>
+    }
+
+    @if (_rolePermissionList?.Permissions?.Count() != 0)
+    {
+        <MudTabs ApplyEffectsToContainer="false" AlwaysShowScrollButtons="false">
+            @foreach (var group in GroupedPermissions.Keys)
+            {
+                var selectedPermissionsInGroup = GroupedPermissions[group].Where(c => c.Selected).ToList();
+                var allPermissionsInGroup = GroupedPermissions[group].ToList();
+
+                <MudTabPanel Text="@group" BadgeData="@($"{selectedPermissionsInGroup.Count}/{allPermissionsInGroup.Count}")" Style="padding-right: 40px;" BadgeColor="@GetGroupBadgeColor(selectedPermissionsInGroup.Count, allPermissionsInGroup.Count)">
+                    <MudTable Class="mt-3" Height="450px" Hover="true" Outlined="true" Items="@allPermissionsInGroup.OrderBy(o => o.Name)" Dense="false" Bordered="false" Striped="true" Breakpoint="Breakpoint.None">
+                        <RowTemplate>
+                            <MudTd>@context.Name</MudTd>
+                            <MudTd><MudSwitch @bind-Checked="@context.Selected" Disabled="@(!_canEditRolePermissions)" Color="Color.Success" /></MudTd>
+                        </RowTemplate>
+                        <PagerContent>
+                            <MudTablePager RowsPerPageString="Строк на странице" InfoFormat="{first_item}-{last_item} из {all_items}" />
+                        </PagerContent>
+                    </MudTable>
+                </MudTabPanel>
+            }
+        </MudTabs>
+    }
+    else
+    {
+        <MudText Class="font-bold pa-6" Typo="Typo.h6" Align="Align.Center">
+            Нет доступных прав доступа для настроек
+        </MudText>
+    }
+</div>
+
+<MudGrid Spacing="1" Class="d-flex justify-end py-3 pl-3" Style="padding-right: 20px">
+    <MudItem xs="12" sm="6" md="3">
+        <MudButton DisableElevation Variant="Variant.Filled" OnClick="SaveAsync" Color="Color.Success" FullWidth Disabled="@(_loading || !_canEditRolePermissions)">
+            @if (_loading)
+            {
+                <MudProgressCircular Size="Size.Small" Color="Color.Info" Indeterminate="true" />
+            }
+            else
+            {
+                <MudText>Сохранить</MudText>
+            }
+        </MudButton>
+    </MudItem>
+    <MudItem xs="12" sm="6" md="3">
+        <MudButton DisableElevation Variant="Variant.Filled" OnClick="Cancel" FullWidth>Отмена</MudButton>
+    </MudItem>
+</MudGrid>

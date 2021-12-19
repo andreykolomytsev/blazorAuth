@@ -1,0 +1,63 @@
+﻿@using AuthClient.Client.Infrastructure.Models.Response
+@using Microsoft.AspNetCore.Components
+
+<MudContainer Class="mobile-scroll">
+    <MudTable Height="450px" Hover="true" Items="_serviceTenantList" Loading="@_loading" Dense="false" Striped="true" Filter="new Func<ResponseTenantService, bool>(Search)" Outlined="true" Breakpoint="Breakpoint.None">
+
+        <ToolBarContent>
+            <MudTextField @bind-Value="_searchString" Immediate="true" FullWidth=false Placeholder="Поиск..." Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0 mb-3"></MudTextField>
+        </ToolBarContent>
+
+        <HeaderContent>
+            <MudTh><MudTableSortLabel SortBy="new Func<ResponseTenantService, object>(x => x.FullName)">Наименование</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<ResponseTenantService, object>(x => x.INN)">ИНН</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<ResponseTenantService, object>(x => x.Email)">Email</MudTableSortLabel></MudTh>
+            <MudTh Class="text-center">Доступ</MudTh>
+        </HeaderContent>
+
+        <RowTemplate>
+            <MudTd DataLabel="Наименование">
+                <MudHighlighter Text="@context.FullName" HighlightedText="@_searchString" />
+            </MudTd>
+            <MudTd DataLabel="ИНН">
+                <MudHighlighter Text="@context.INN" HighlightedText="@_searchString" />
+            </MudTd>
+            <MudTd DataLabel="Email">
+                <MudHighlighter Text="@context.Email" HighlightedText="@_searchString" />
+            </MudTd>
+            <MudTd DataLabel="Доступ" Style="width: 90px" Class="text-center">
+                <MudSwitch @bind-Checked="@context.Selected" Disabled="@(!_canEditMSs)" Color="Color.Success"></MudSwitch>
+            </MudTd>
+        </RowTemplate>
+
+        <NoRecordsContent>
+            <MudText>Нет данных для отображения</MudText>
+        </NoRecordsContent>
+
+        <LoadingContent>
+            <MudText>Подождите, идет загрузка данных...</MudText>
+        </LoadingContent>
+
+        <PagerContent>
+            <TablePager />
+        </PagerContent>
+    </MudTable>
+
+    <MudGrid Spacing="1" Class="d-flex justify-end py-3">
+        <MudItem xs="12" sm="6" md="3" lg="2">
+            <MudButton DisableElevation Variant="Variant.Filled" Color="Color.Success" FullWidth Disabled="_loading" OnClick="SaveAsync">
+                @if (_loading)
+                {
+                    <MudProgressCircular Size="Size.Small" Color="Color.Info" Indeterminate="true" />
+                }
+                else
+                {
+                    <MudText>Сохранить</MudText>
+                }
+            </MudButton>
+        </MudItem>
+        <MudItem xs="12" sm="6" md="3" lg="2">
+            <MudButton DisableElevation Variant="Variant.Filled" OnClick="Cancel" FullWidth>Отмена</MudButton>
+        </MudItem>
+    </MudGrid>
+</MudContainer>

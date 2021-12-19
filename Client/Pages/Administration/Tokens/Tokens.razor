@@ -1,0 +1,58 @@
+﻿@page "/pages/tokens"
+@attribute [Authorize(Policy = AllPermissions.Tokens.View)]
+@using AuthClient.Client.Infrastructure.Models.Response
+
+<Breadcrumbs Title="Токены доступа" BreadcrumbItems="_items" />
+
+<MudGrid>
+    <MudItem xs="12" md="3">
+        <MudButton DisableElevation OnClick="ReloadDataAsync" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary" Disabled="@_loading">Обновить</MudButton>
+    </MudItem>
+</MudGrid>
+
+<MudPaper Class="mt-3 mb-5">
+    <MudTable ServerData="@(new Func<TableState, Task<TableData<ResponseAccessToken>>>(ServerReloadAsync))" @ref="_tableData" Loading="@_loading" Outlined="true" Hover="true" Striped="true" Breakpoint="Breakpoint.None" FixedHeader="true">
+        <HeaderContent>
+            <MudTh>Статус</MudTh>
+            <MudTh>Токен</MudTh>
+            <MudTh>Заканчивается</MudTh>
+            <MudTh>Пользователь</MudTh>
+            <MudTh>Инфо</MudTh>
+            <MudTh Class="text-center">Опции</MudTh>
+        </HeaderContent>
+
+        <RowTemplate>
+            <MudTd DataLabel="Active" Class="text-center">
+                <MudIcon Icon="@(context.IsActive ? Icons.Material.Filled.CheckCircle : Icons.Material.Filled.RemoveCircleOutline)"
+                         Color="@(context.IsActive ? Color.Success : Color.Error)" Title="@(context.IsActive ? "Активен" : "Заблокирован")"></MudIcon>
+            </MudTd>
+            <MudTd DataLabel="Токен">@context.Token.Substring(0, 50)...</MudTd>
+            <MudTd DataLabel="Заканчивается">@context.Expires</MudTd>
+            <MudTd DataLabel="Пользователь">@context.User.FirstName @context.User.LastName</MudTd>
+            <MudTd DataLabel="Инфо">@(context.IsOutDated ? "Обновлены права доступа" : "Выполнен вход")</MudTd>
+            <MudTd DataLabel="Actions" Style="width: 80px">
+                <MudMenu Direction="Direction.Start" OffsetX="true" Icon="@Icons.Material.Filled.MoreVert" Color="Color.Primary">
+                    @if (_canEditTokens)
+                    {
+                        <MudMenuItem OnClick="(() => ChangeStatusModal(context.Token, context.IsActive))"><div class="d-flex"><MudIcon Icon="fas fa-edit" Color="Color.Info" Class="mr-3" />Изменить статус</div></MudMenuItem>
+                    }
+
+                    <MudMenuItem OnClick="(() => MoreInfoModal(context.Token))"><div class="d-flex"><MudIcon Icon="fas fa-info-circle" Color="Color.Info" Class="mr-3" />Подробнее</div></MudMenuItem>
+                </MudMenu>
+            </MudTd>
+
+        </RowTemplate>
+
+        <NoRecordsContent>
+            <MudText>Нет данных для отображения</MudText>
+        </NoRecordsContent>
+
+        <LoadingContent>
+            <MudText>Подождите, идет загрузка данных...</MudText>
+        </LoadingContent>
+
+        <PagerContent>
+            <TablePager />
+        </PagerContent>
+    </MudTable>
+</MudPaper>

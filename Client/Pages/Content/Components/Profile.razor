@@ -1,0 +1,57 @@
+﻿
+<MudGrid>
+    <MudItem xs="12" sm="6" md="6" lg="3">
+        <MudCard Elevation="25">
+            <MudCardContent>
+                <div class="d-flex justify-center mb-4">
+                    <MudAvatar Color="Color.Info" Style="height:150px; width:150px;"><p style="font-size: 60px">@_firstLetterOfName</p></MudAvatar>
+                </div>
+                <MudText Typo="Typo.h6" Align="Align.Center">@_tenantName</MudText>
+                <MudText Align="Align.Center" Class="font-bold">@_email</MudText>
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+    <MudItem xs="12" sm="6" md="6" lg="9">
+        <EditForm Model="@_profileModel" OnValidSubmit="UpdateProfileAsync">
+            <MudCard Elevation="25">
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudText>Профиль</MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+                <MudCardContent>
+                    <MudGrid>
+                        <MudItem xs="12" lg="6">
+                            <MudTextField @bind-Value="@_profileModel.LastName" For="@(() => _profileModel.LastName)" Label="Фамилия" Variant="Variant.Outlined" Required />
+                        </MudItem>
+                        <MudItem xs="12" lg="6">
+                            <MudTextField @bind-Value="@_profileModel.FirstName" For="@(() => _profileModel.FirstName)" Label="Имя" Variant="Variant.Outlined" Required />
+                        </MudItem>
+                        <MudItem xs="12" lg="6">
+                            <MudTextField @bind-Value="@_profileModel.MiddleName" For="@(() => _profileModel.MiddleName)" Label="Отчество" Variant="Variant.Outlined" />
+                        </MudItem>
+                        <MudItem xs="12" lg="6">
+                            <MudTextField @bind-Value="@_profileModel.PhoneNumber" For="@(() => _profileModel.PhoneNumber)" Label="Номер телефона" Variant="Variant.Outlined" />
+                        </MudItem>
+                    </MudGrid>
+                </MudCardContent>
+                @if (_canEditUser)
+                {
+                    <MudCardActions Class="pb-4 pr-4">
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" ButtonType="ButtonType.Submit" Disabled="_loading">
+                            @if (_loading)
+                            {
+                                <MudProgressCircular Size="Size.Small" Color="Color.Info" Indeterminate="true" />
+                                <MudText Class="ml-2">Сохранить</MudText>
+                            }
+                            else
+                            {
+                                <MudText>Сохранить</MudText>
+                            }
+                        </MudButton>
+                    </MudCardActions>
+                }
+            </MudCard>
+        </EditForm>
+    </MudItem>
+</MudGrid>

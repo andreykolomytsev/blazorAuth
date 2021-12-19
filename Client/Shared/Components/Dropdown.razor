@@ -1,0 +1,41 @@
+﻿@typeparam T
+@using AuthClient.Shared.Helpers
+
+<MudSelect T="string" OffsetY="true" Variant="MyVariant" Margin="MyMargin" Value="MyValue" ValueChanged="MyValueChanged" Label="@MyLabel">
+    <InfiniteScrolling T="T" ItemsProvider="GetData" LoadMore="Disabled">
+
+        <ItemTemplate Context="item">
+            @OptionTemplate(item)
+        </ItemTemplate>
+
+        <LoadingTemplate>
+            <div class="p-3 text-center">Загрузка...</div>
+        </LoadingTemplate>
+    </InfiniteScrolling>
+</MudSelect>
+
+@code {
+    [Parameter]
+    public string MyLabel { get; set; }
+
+    [Parameter]
+    public Margin MyMargin { get; set; } = Margin.Dense;
+
+    [Parameter]
+    public Variant MyVariant { get; set; } = Variant.Outlined;
+
+    [Parameter]
+    public bool Disabled { get; set; }
+
+    [Parameter]
+    public RenderFragment<T> OptionTemplate { get; set; }
+
+    [Parameter]
+    public InfiniteScrollingItemsProviderRequestDelegate<T> GetData { get; set; }
+
+    [Parameter]
+    public string MyValue { get; set; }
+
+    [Parameter]
+    public EventCallback<string> MyValueChanged { get; set; }
+}

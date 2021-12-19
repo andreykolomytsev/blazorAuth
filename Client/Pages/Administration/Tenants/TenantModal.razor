@@ -1,0 +1,32 @@
+﻿
+<EditForm Model="@_tenantModel" OnValidSubmit="SubmitAsync">
+    <DataAnnotationsValidator />
+    <div class="px-7">
+        <TextField ValueExpression="@(() => _tenantModel.FullName)" @bind-MyValue="_tenantModel.FullName" MyLabel="Наименование" MyRequired />
+        <TextField ValueExpression="@(() => _tenantModel.INN)" @bind-MyValue="_tenantModel.INN" MyLabel="ИНН" MyRequired />
+        <TextField ValueExpression="@(() => _tenantModel.KPP)" @bind-MyValue="_tenantModel.KPP" MyLabel="КПП" />
+        <TextField ValueExpression="@(() => _tenantModel.OGRN)" @bind-MyValue="_tenantModel.OGRN" MyLabel="ОГРН" />
+        <TextField ValueExpression="@(() => _tenantModel.OKPO)" @bind-MyValue="_tenantModel.OKPO" MyLabel="ОКПО" />
+        <TextField ValueExpression="@(() => _tenantModel.Email)" @bind-MyValue="_tenantModel.Email" MyLabel="Email" />
+        <TextField ValueExpression="@(() => _tenantModel.Phone)" @bind-MyValue="_tenantModel.Phone" MyLabel="Телефон" />
+        <TextField ValueExpression="@(() => _tenantModel.Address)" @bind-MyValue="_tenantModel.Address" MyLabel="Адрес" MyLines="3" />
+    </div>
+
+    <MudGrid Spacing="1" Class="d-flex justify-end py-3 px-7">
+        <MudItem xs="12" sm="6" md="3">
+            <MudButton DisableElevation Variant="Variant.Filled" Color="Color.Success" FullWidth Disabled="_loading" ButtonType="ButtonType.Submit">
+                @if (_loading)
+                {
+                    <MudProgressCircular Size="Size.Small" Color="Color.Info" Indeterminate="true" />
+                }
+                else
+                {
+                    <MudText>Сохранить</MudText>
+                }
+            </MudButton>
+        </MudItem>
+        <MudItem xs="12" sm="6" md="3">
+            <MudButton DisableElevation Variant="Variant.Filled" OnClick="Cancel" FullWidth>Отмена</MudButton>
+        </MudItem>
+    </MudGrid>
+</EditForm>

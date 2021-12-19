@@ -1,0 +1,87 @@
+﻿
+@if (_isAddMode)
+{
+    <EditForm Model="@_userCreateModel" OnValidSubmit="SubmitAsync">
+        <DataAnnotationsValidator />
+        <div class="px-7">
+            <TextField ValueExpression="@(() => _userCreateModel.FirstName)" @bind-MyValue="_userCreateModel.FirstName" MyLabel="Имя" MyRequired MyAdornment="Adornment.Start" MyAdornmentIcon="@Icons.Material.Outlined.Person" MyAdornmentColor="Color.Primary" />
+            <TextField ValueExpression="@(() => _userCreateModel.LastName)" @bind-MyValue="_userCreateModel.LastName" MyLabel="Фамилия" MyRequired MyAdornment="Adornment.Start" MyAdornmentIcon="@Icons.Material.Outlined.Person" MyAdornmentColor="Color.Primary" />
+            <TextField ValueExpression="@(() => _userCreateModel.MiddleName)" @bind-MyValue="_userCreateModel.MiddleName" MyLabel="Отчество" MyAdornment="Adornment.Start" MyAdornmentIcon="@Icons.Material.Outlined.Person" MyAdornmentColor="Color.Primary" />
+            <TextField ValueExpression="@(() => _userCreateModel.Email)" @bind-MyValue="_userCreateModel.Email" MyInputType="InputType.Email" MyLabel="Email" MyRequired MyAdornment="Adornment.Start" MyAdornmentIcon="@Icons.Material.Outlined.Email" MyAdornmentColor="Color.Primary" />
+            <TextField ValueExpression="@(() => _userCreateModel.PhoneNumber)" @bind-MyValue="_userCreateModel.PhoneNumber" MyLabel="Номер телефона" MyAdornment="Adornment.Start" MyAdornmentIcon="@Icons.Material.Outlined.Phone" MyAdornmentColor="Color.Primary" />
+
+            @if (string.IsNullOrEmpty(UserId))
+            {
+                <TextField ValueExpression="@(() => _userCreateModel.Password)" MyInputType="@_passwordInput" @bind-MyValue="_userCreateModel.Password" MyLabel="Пароль" MyRequired MyAdornment="Adornment.End" MyAdornmentIcon="@_passwordInputIcon" MyOnAdornmentClick="TogglePasswordVisibility" />
+                <TextField ValueExpression="@(() => _userCreateModel.ConfirmPassword)" MyInputType="InputType.Password" @bind-MyValue="_userCreateModel.ConfirmPassword" MyLabel="Подтвердите пароль" MyRequired />
+            }
+
+            <MudCheckBox @bind-Checked="@_userCreateModel.IsActive" Label="Активный статус пользователя" Color="Color.Primary" Dense Class="mt-2"></MudCheckBox>
+
+            @if (_canViewTenants)
+            {
+                <MudAlert Class="mt-2" Variant="Variant.Outlined" Severity="Severity.Warning">
+                    <MudText Typo="Typo.body1" Class="font-bold">Будет записан на организацию <MudLink @onclick="InvokeTenantModal" Class="pointer font-bold">@_tenant.FullName</MudLink></MudText>
+                </MudAlert>
+            }
+        </div>
+
+        <MudGrid Spacing="1" Class="d-flex justify-end py-3 px-7">
+            <MudItem xs="12" sm="6" md="3">
+                <MudButton DisableElevation Variant="Variant.Filled" Color="Color.Success" FullWidth Disabled="_loading" ButtonType="ButtonType.Submit">
+                    @if (_loading)
+                    {
+                        <MudProgressCircular Size="Size.Small" Color="Color.Info" Indeterminate="true" />
+                    }
+                    else
+                    {
+                        <MudText>Сохранить</MudText>
+                    }
+                </MudButton>
+            </MudItem>
+            <MudItem xs="12" sm="6" md="3">
+                <MudButton DisableElevation Variant="Variant.Filled" OnClick="Cancel" FullWidth>Отмена</MudButton>
+            </MudItem>
+        </MudGrid>
+    </EditForm>
+}
+else
+{
+    <EditForm Model="@_userUpdateModel" OnValidSubmit="SubmitAsync">
+        <DataAnnotationsValidator />
+        <div class="px-7">
+            <TextField ValueExpression="@(() => _userUpdateModel.FirstName)" @bind-MyValue="_userUpdateModel.FirstName" MyLabel="Имя" MyRequired MyAdornment="Adornment.Start" MyAdornmentIcon="@Icons.Material.Outlined.Person" MyAdornmentColor="Color.Primary" />
+            <TextField ValueExpression="@(() => _userUpdateModel.LastName)" @bind-MyValue="_userUpdateModel.LastName" MyLabel="Фамилия" MyRequired MyAdornment="Adornment.Start" MyAdornmentIcon="@Icons.Material.Outlined.Person" MyAdornmentColor="Color.Primary" />
+            <TextField ValueExpression="@(() => _userUpdateModel.MiddleName)" @bind-MyValue="_userUpdateModel.MiddleName" MyLabel="Отчество" MyAdornment="Adornment.Start" MyAdornmentIcon="@Icons.Material.Outlined.Person" MyAdornmentColor="Color.Primary" />
+            <TextField ValueExpression="@(() => _userUpdateModel.Email)" @bind-MyValue="_userUpdateModel.Email" MyInputType="InputType.Email" MyLabel="Email" MyRequired MyAdornment="Adornment.Start" MyAdornmentIcon="@Icons.Material.Outlined.Email" MyAdornmentColor="Color.Primary" />
+            <TextField ValueExpression="@(() => _userUpdateModel.PhoneNumber)" @bind-MyValue="_userUpdateModel.PhoneNumber" MyLabel="Номер телефона" MyAdornment="Adornment.Start" MyAdornmentIcon="@Icons.Material.Outlined.Phone" MyAdornmentColor="Color.Primary" />
+
+            <MudCheckBox @bind-Checked="@_userUpdateModel.IsActive" Label="Активный статус пользователя" Color="Color.Primary" Dense Class="mt-2"></MudCheckBox>
+
+            @if (_canViewTenants)
+            {
+                <MudAlert Class="mt-2" Variant="Variant.Outlined" Severity="Severity.Warning">
+                    <MudText Typo="Typo.body1" Class="font-bold">Будет записан на организацию <MudLink @onclick="InvokeTenantModal" Class="pointer font-bold">@_tenant.FullName</MudLink></MudText>
+                </MudAlert>
+            }
+        </div>
+
+        <MudGrid Spacing="1" Class="d-flex justify-end py-3 px-7">
+            <MudItem xs="12" sm="6" md="3">
+                <MudButton DisableElevation Variant="Variant.Filled" Color="Color.Success" FullWidth Disabled="_loading" ButtonType="ButtonType.Submit">
+                    @if (_loading)
+                    {
+                        <MudProgressCircular Size="Size.Small" Color="Color.Info" Indeterminate="true" />
+                    }
+                    else
+                    {
+                        <MudText>Сохранить</MudText>
+                    }
+                </MudButton>
+            </MudItem>
+            <MudItem xs="12" sm="6" md="3">
+                <MudButton DisableElevation Variant="Variant.Filled" OnClick="Cancel" FullWidth>Отмена</MudButton>
+            </MudItem>
+        </MudGrid>
+    </EditForm>
+}

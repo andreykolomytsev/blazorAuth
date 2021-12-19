@@ -1,0 +1,66 @@
+﻿@page "/administration/microservices"
+@attribute [Authorize(Policy = AllPermissions.Services.View)]
+@using AuthClient.Client.Infrastructure.Models.Response
+
+<Breadcrumbs Title="Микросервисы" BreadcrumbItems="_items" />
+
+<MudGrid Spacing="1">
+    @if (_canCreateMS)
+    {
+        <MudItem xs="12" sm="3" md="3" lg="2">
+            <MudButton FullWidth="true" Variant="Variant.Filled" Color="Color.Success" OnClick="(() => InvokeModal())"
+                       StartIcon="@Icons.Material.Filled.Add" IconColor="Color.Surface">Добавить</MudButton>
+        </MudItem>
+    }
+    <MudItem xs="12" sm="3" md="3" lg="2">
+        <MudButton FullWidth="true" Variant="Variant.Filled" Color="Color.Primary" OnClick="ReloadDataAsync"
+                   StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Disabled="@_loading">
+            Обновить
+        </MudButton>
+    </MudItem>
+</MudGrid>
+
+<MudPaper Class="mt-3 mb-5">
+    <MudTable ServerData="@(new Func<TableState, Task<TableData<ResponseMS>>>(ServerReloadAsync))" @ref="_tableData" Loading="@_loading" Bordered="true" Outlined="true" Hover="true" Striped="true" Breakpoint="Breakpoint.None" FixedHeader="true" Dense="true" HeaderClass="table-head-bordered">
+        <HeaderContent>
+            <MudTh>№</MudTh>
+            <MudTh>Наименование</MudTh>
+            @if (_canEditMS || _canDeleteMS)
+            {
+                <MudTh Class="text-center">Опции</MudTh>
+            }
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="№">@(_msList.IndexOf(context) + 1)</MudTd>
+            <MudTd DataLabel="Наименование">@context.FullName</MudTd>
+
+            @if (_canEditMS || _canDeleteMS)
+            {
+                <MudTd DataLabel="Actions" Style="width: 80px">
+                    <MudMenu Direction="Direction.Start" OffsetX="true" Icon="@Icons.Material.Filled.MoreVert" Color="Color.Primary">
+                        @if (_canEditMS)
+                        {
+                            <MudMenuItem OnClick="(() => InvokeModal(context.Id))"><div class="d-flex"><MudIcon Icon="fas fa-edit" Color="Color.Info" Class="mr-3" />Изменить</div></MudMenuItem>
+                            <MudMenuItem OnClick="(() => ManageTenants(context.Id))"><div class="d-flex"><MudIcon Icon="fas fa-user-shield" Color="Color.Warning" Class="mr-3" />Организации</div></MudMenuItem>
+                            <MudMenuItem OnClick="(() => ManageUsers(context.Id))"><div class="d-flex"><MudIcon Icon="fas fa-users-cog" Color="Color.Warning" Class="mr-3" />Пользователи</div></MudMenuItem>
+                        }
+                        @if (_canDeleteMS)
+                        {<MudMenuItem OnClick="(() => DeleteModal(context.Id, context.FullName))"><div class="d-flex"><MudIcon Icon="fas fa-trash" Color="Color.Error" Class="mr-3" />Удалить</div></MudMenuItem>}
+                    </MudMenu>
+                </MudTd>
+            }
+        </RowTemplate>
+
+        <NoRecordsContent>
+            <MudText>Нет данных для отображения</MudText>
+        </NoRecordsContent>
+
+        <LoadingContent>
+            <MudText>Подождите, идет загрузка данных...</MudText>
+        </LoadingContent>
+
+        <PagerContent>
+            <TablePager />
+        </PagerContent>
+    </MudTable>
+</MudPaper>

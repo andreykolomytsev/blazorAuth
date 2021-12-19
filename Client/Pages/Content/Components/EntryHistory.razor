@@ -1,0 +1,31 @@
+﻿@using AuthClient.Client.Infrastructure.Models.Response
+
+<MudPaper Elevation="25" Class="mb-3 pa-3">
+    <MudTable ServerData="@(new Func<TableState, Task<TableData<ResponseAccessToken>>>(ServerReloadAsync))" Loading="@_loading" Outlined="true" Hover="true" Striped="true" Breakpoint="Breakpoint.None" FixedHeader="true">
+        <HeaderContent>
+            <MudTh>Дата входа</MudTh>
+            <MudTh>IP адрес</MudTh>
+            <MudTh>Браузер</MudTh>
+            <MudTh>Инфо</MudTh>
+        </HeaderContent>
+
+        <RowTemplate>
+            <MudTd DataLabel="Дата входа">@context.Created.ToShortDateString() в @context.Created.ToShortTimeString()</MudTd>
+            <MudTd DataLabel="IP адрес">@context.CreatedByIp</MudTd>
+            <MudTd DataLabel="Браузер">@context.CreatedByBrowser</MudTd>
+            <MudTd DataLabel="Инфо">@(context.IsOutDated ? "Обновлены права доступа" : "Выполнен вход")</MudTd>
+        </RowTemplate>
+
+        <NoRecordsContent>
+            <MudText>Нет данных для отображения</MudText>
+        </NoRecordsContent>
+
+        <LoadingContent>
+            <MudText>Подождите, идет загрузка данных...</MudText>
+        </LoadingContent>
+
+        <PagerContent>
+            <TablePager />
+        </PagerContent>
+    </MudTable>
+</MudPaper>

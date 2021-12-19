@@ -1,0 +1,66 @@
+﻿@using System.Security.Claims
+@using AuthClient.Shared.Constants.Role
+
+<MudNavMenu>
+
+    <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Home" IconColor="Color.Warning" Class="mt-5" title="Мои сервисы">Мои сервисы</MudNavLink>
+
+    @if (_canViewUsers)
+    {
+        <MudNavLink Href="/management/users" Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.People" IconColor="Color.Success" title="Пользователи">Пользователи</MudNavLink>
+    }
+
+    @if (_canViewRoles)
+    {
+        <MudNavLink Href="/management/roles" Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.ManageAccounts" IconColor="Color.Success">Роли</MudNavLink>
+    }
+
+    @if (_canViewTenants || _isSuperAdmin)
+    {
+        @*<MudListSubheader Class="mt-2 mb-n2">Администрирование</MudListSubheader>*@
+
+        <MudDivider />
+
+        @if (_canViewTenants)
+        {
+            <MudNavLink Href="/administration/tenants" Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.CorporateFare" IconColor="Color.Inherit">Организации</MudNavLink>
+        }
+        @if (_isSuperAdmin)
+        {
+            <MudNavLink Href="/administration/microservices" Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.WifiTethering" IconColor="Color.Inherit">Микросервисы</MudNavLink>
+            <MudNavLink Href="/administration/permissions" Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.AddModerator" IconColor="Color.Inherit">Права доступа</MudNavLink>
+        }
+    }
+
+    @if (_canViewTokens)
+    {
+        @*<MudListSubheader Class="mt-2 mb-n2">Прочее</MudListSubheader>*@
+
+        <MudDivider />
+
+        <MudNavLink Href="/pages/tokens" Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.VerifiedUser" IconColor="Color.Inherit">Токены</MudNavLink>
+        <MudNavLink Href="/pages/logs" Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.TransitEnterexit" IconColor="Color.Inherit">Логи входов</MudNavLink>
+    }
+</MudNavMenu>
+
+@code {
+    private ClaimsPrincipal _authenticationStateProviderUser;
+
+    private bool _canViewRoles;
+    private bool _canViewUsers;
+    private bool _canViewTokens;
+    private bool _canViewTenants;
+    private bool _isSuperAdmin;
+
+    protected override async Task OnParametersSetAsync()
+    {
+
+        _authenticationStateProviderUser = await _stateProvider.GetAuthenticationStateProviderUserAsync();
+
+        _canViewRoles = (await _authorizationService.AuthorizeAsync(_authenticationStateProviderUser, AllPermissions.Roles.View)).Succeeded;
+        _canViewUsers = (await _authorizationService.AuthorizeAsync(_authenticationStateProviderUser, AllPermissions.Users.View)).Succeeded;
+        _canViewTokens = (await _authorizationService.AuthorizeAsync(_authenticationStateProviderUser, AllPermissions.Tokens.View)).Succeeded;
+        _canViewTenants = (await _authorizationService.AuthorizeAsync(_authenticationStateProviderUser, AllPermissions.Tenants.View)).Succeeded;
+        _isSuperAdmin = _authenticationStateProviderUser.IsInRole(RoleConstants.SuperAdminRole);
+    }
+}

@@ -1,0 +1,57 @@
+﻿@page "/administration/permissions"
+@attribute [Authorize(Roles = RoleConstants.SuperAdminRole)]
+@using AuthClient.Shared.Constants.Role
+@using AuthClient.Client.Infrastructure.Models.Response
+
+<Breadcrumbs Title="Права доступа" BreadcrumbItems="_items" />
+
+<MudGrid Spacing="1">
+    <MudItem xs="12" sm="3" md="3" lg="2">
+        <MudButton FullWidth="true" Variant="Variant.Filled" Color="Color.Success" OnClick="(() => InvokeModal())"
+                   StartIcon="@Icons.Material.Filled.Add" IconColor="Color.Surface">Добавить</MudButton>
+    </MudItem>
+
+    <MudItem xs="12" sm="3" md="3" lg="2">
+        <MudButton FullWidth="true" Variant="Variant.Filled" Color="Color.Primary" OnClick="ReloadDataAsync"
+                   StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Disabled="@_loading">
+            Обновить
+        </MudButton>
+    </MudItem>
+</MudGrid>
+
+<MudPaper Class="mt-3 mb-5">
+    <MudTable ServerData="@(new Func<TableState, Task<TableData<ResponsePermission>>>(ServerReloadAsync))" @ref="_tableData" Loading="@_loading" Bordered="true" Outlined="true" Hover="true" Striped="true" Breakpoint="Breakpoint.None" FixedHeader="true" Dense="true" HeaderClass="table-head-bordered">
+        <HeaderContent>
+            <MudTh>№</MudTh>
+            <MudTh>Тип</MudTh>
+            <MudTh>Значение</MudTh>
+
+            <MudTh Class="text-center">Опции</MudTh>
+
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="№">@(_permissionsList.IndexOf(context) + 1)</MudTd>
+            <MudTd DataLabel="Тип">@context.Type</MudTd>
+            <MudTd DataLabel="Значение">@context.Value</MudTd>
+
+            <MudTd DataLabel="Actions" Style="width: 80px">
+                <MudMenu Direction="Direction.Start" OffsetX="true" Icon="@Icons.Material.Filled.MoreVert" Color="Color.Primary">
+                    <MudMenuItem OnClick="(() => InvokeModal(context.Id))"><div class="d-flex"><MudIcon Icon="fas fa-edit" Color="Color.Info" Class="mr-3" />Изменить</div></MudMenuItem>
+                    <MudMenuItem OnClick="(() => DeleteModal(context.Id, context.Value))"><div class="d-flex"><MudIcon Icon="fas fa-trash" Color="Color.Error" Class="mr-3" />Удалить</div></MudMenuItem>
+                </MudMenu>
+            </MudTd>
+        </RowTemplate>
+
+        <NoRecordsContent>
+            <MudText>Нет данных для отображения</MudText>
+        </NoRecordsContent>
+
+        <LoadingContent>
+            <MudText>Подождите, идет загрузка данных...</MudText>
+        </LoadingContent>
+
+        <PagerContent>
+            <TablePager />
+        </PagerContent>
+    </MudTable>
+</MudPaper>

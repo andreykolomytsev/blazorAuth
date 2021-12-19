@@ -1,0 +1,42 @@
+﻿@page "/pages/logs"
+@using AuthClient.Client.Infrastructure.Models.Response
+
+<Breadcrumbs Title="Логи входов" BreadcrumbItems="_items" />
+
+<MudGrid>
+    <MudItem xs="12" md="3">
+        <MudButton DisableElevation OnClick="ReloadDataAsync" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary" Disabled="@_loading">Обновить</MudButton>
+    </MudItem>
+</MudGrid>
+
+<MudPaper Class="mt-3 mb-5">
+    <MudTable ServerData="@(new Func<TableState, Task<TableData<ResponseAccessToken>>>(ServerReloadAsync))" @ref="_tableData" Loading="@_loading" Outlined="true" Hover="true" Striped="true" Breakpoint="Breakpoint.None" FixedHeader="true">
+        <HeaderContent>
+            <MudTh>Пользователь</MudTh>
+            <MudTh>Дата входа</MudTh>
+            <MudTh>IP адрес</MudTh>
+            <MudTh>Браузер</MudTh>
+            <MudTh>Инфо</MudTh>
+        </HeaderContent>
+
+        <RowTemplate>
+            <MudTd DataLabel="Пользователь">@context.User.FirstName @context.User.LastName</MudTd>
+            <MudTd DataLabel="Дата входа">@context.Created.ToShortDateString() в @context.Created.ToShortTimeString()</MudTd>
+            <MudTd DataLabel="IP адрес">@context.CreatedByIp</MudTd>
+            <MudTd DataLabel="Браузер">@context.CreatedByBrowser</MudTd>
+            <MudTd DataLabel="Инфо">@(context.IsOutDated ? "Обновлены права доступа" : "Выполнен вход")</MudTd>
+        </RowTemplate>
+
+        <NoRecordsContent>
+            <MudText>Нет данных для отображения</MudText>
+        </NoRecordsContent>
+
+        <LoadingContent>
+            <MudText>Подождите, идет загрузка данных...</MudText>
+        </LoadingContent>
+
+        <PagerContent>
+            <TablePager />
+        </PagerContent>
+    </MudTable>
+</MudPaper>

@@ -1,0 +1,16 @@
+﻿@namespace AuthClient.Client.Shared.Components
+
+<div class="d-flex flex-wrap pt-3 pb-3">
+    <MudText Color="Color.Primary" Class="font-bold d-grid align-center text-30">@Title</MudText>
+
+    @if (BreadcrumbItems != null)
+    {
+        <MudBreadcrumbs Items="@BreadcrumbItems" Class="pl-2 pr-2 pt-1 pb-1"></MudBreadcrumbs>
+    }
+</div>
+
+@code {
+    [Parameter] public string Title { get; set; }
+
+    [Parameter] public List<BreadcrumbItem> BreadcrumbItems { get; set; }
+}

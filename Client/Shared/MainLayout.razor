@@ -1,0 +1,26 @@
+﻿@inherits LayoutComponentBase
+
+<MudRTLProvider>
+    <MudThemeProvider Theme="_currentTheme" />
+    <MudDialogProvider />
+    <MudSnackbarProvider />
+    <AuthorizeView>
+        <NotAuthorized>
+            <div style="background-size: cover; height: 100vh" class="d-flex justify-center align-center">
+                <MudPaper Elevation="25" Class="pa-8 rounded-lg" Style="max-width: 600px">
+                    @Body
+                </MudPaper>
+            </div>
+            <div style="position:fixed; z-index: 2000; bottom: 16px; left: 16px">
+                <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Brightness4" aria-label="Тема" title="Сменить тему" OnClick="@DarkMode" />
+            </div>
+        </NotAuthorized>
+        <Authorized>
+            
+                <MainBody OnDarkModeToggle="@DarkMode">
+                    @Body
+                </MainBody>
+            
+        </Authorized>
+    </AuthorizeView>
+</MudRTLProvider>
